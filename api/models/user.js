@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -16,6 +17,18 @@ const userSchema = new mongoose.Schema({
   image: {
     type: String,
     required: true,
+  },
+  dateOfBirth: {
+    type: Date, // เพิ่มวันเดือนปีเกิด
+  },
+  weight: {
+    type: Number, // เพิ่มน้ำหนัก
+  },
+  height: {
+    type: Number, // เพิ่มส่วนสูง
+  },
+  diabetesType: {
+    type: String, // เพิ่มประเภทของเบาหวาน
   },
   freindRequests: [
     {
@@ -37,7 +50,6 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+const User = mongoose.model("User", userSchema);
 
-const User = mongoose.model("User",userSchema);
-
-module.exports = User
+module.exports = User;

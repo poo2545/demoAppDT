@@ -1,4 +1,4 @@
-import React, { useState , useLayoutEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import {
     View,
     Text,
@@ -13,32 +13,32 @@ const HomePage = () => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-          headerTitle: () => (
-            <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular',justifyContent:'center' }}>FOR YOU</Text>
-          ),
-          headerStyle: {
-            backgroundColor: '#FFFFFF',
-          },
+            headerTitle: () => (
+                <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>FOR YOU</Text>
+            ),
+            headerStyle: {
+                backgroundColor: '#FFFFFF',
+            },
         });
-      }, []);
+    }, []);
 
     return (
         <SafeAreaView style={styles.container}>
-            
-            <View style={styles.inputContainer}>
-                <View style={styles.input}>
+
+            <View style={styles.recomend}>
+                <View style={styles.inputrecomend}>
                     <Image style={{ width: 350, height: 170, borderRadius: 5, marginTop: 15 }} source={require('../assets/food.png')} />
                     <Text style={{ marginTop: 10, fontFamily: 'Kanit_400Regular', fontSize: 20, }} > ควรได้รับพลังงานจากอาหารวันละ</Text>
                     <Text style={{ marginTop: 1, fontFamily: 'Kanit_400Regular', fontSize: 20, }} > 1,200-1,600 กิโลแคลอรี่ </Text>
                 </View>
             </View>
-            <View style={styles.inputContainer2}>
+            <View style={styles.inputContainerrecomend}>
                 <Text style={{ marginTop: 20, fontFamily: 'Kanit_400Regular', fontSize: 10 }} > แนะนำอื่นๆ </Text>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>อาหารที่ควรงด</Text>
+                <TouchableOpacity style={styles.button22}>
+                    <Text style={styles.buttonText22}>อาหารที่ควรงด</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>อาหารที่แนะนำ</Text>
+                <TouchableOpacity style={styles.button22}>
+                    <Text style={styles.buttonText22}>อาหารที่แนะนำ</Text>
                 </TouchableOpacity>
             </View>
         </SafeAreaView>
@@ -51,24 +51,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: '#C2FFD3',
     },
-    inputContainer: {
+    recomend: {
         alignItems: 'center',
         width: '90%',
-        marginTop:20,
-    },    
-    inputContainer2: {
-        alignItems: 'center',
-        width: '90%',
-        marginBottom:50
+        marginTop: 20,
     },
-    input: {
+    inputContainerrecomend: {
+        alignItems: 'center',
+        width: '90%',
+        marginBottom: 50
+    },
+    inputrecomend: {
         backgroundColor: '#fff',
         height: '65%',
         width: '100%',
         borderRadius: 5,
         alignItems: 'center',
     },
-    button: {
+    button22: {
         width: '100%',
         height: 50,
         backgroundColor: '#52B788',
@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: 15,
     },
-    buttonText: {
+    buttonText22: {
         color: '#FFF',
         fontSize: 18,
         fontFamily: 'Kanit_400Regular',

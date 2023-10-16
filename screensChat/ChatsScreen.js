@@ -13,7 +13,7 @@ const ChatsScreen = () => {
     const acceptedFriendsList = async () => {
       try {
         const response = await fetch(
-          `http://10.0.14.153:8000/accepted-friends/${userId}`
+          `http://172.20.10.6:8000/accepted-friends/${userId}`
         );
         const data = await response.json();
 
@@ -29,7 +29,7 @@ const ChatsScreen = () => {
   }, []);
   console.log("friends",acceptedFriends)
   return (
-    <ScrollView showsVerticalScrollIndicator={false}>
+    <ScrollView style={{backgroundColor:'#C2FFD3' , flex: 1 }} showsVerticalScrollIndicator={false}>
       <Pressable>
           {acceptedFriends.map((item,index) => (
               <UserChat key={index} item={item}/>

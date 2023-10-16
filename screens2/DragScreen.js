@@ -1,13 +1,16 @@
-import React, { useState , useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import {
   View,
   Text,
-  StyleSheet,
   TextInput,
-  TouchableOpacity, SafeAreaView,FlatList
+  Button,
+  StyleSheet,
+  TouchableOpacity,
+  FlatList,
 } from 'react-native';
-import axios  from 'axios';
+import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
+import { UserType } from "../UserContext";
 
 const DragScreen = () => {
   const [medicationName, setMedicationName] = useState('');
@@ -16,48 +19,56 @@ const DragScreen = () => {
   const [size, setSize] = useState('');
   const [medicationRecords, setMedicationRecords] = useState([]);
   const navigation = useNavigation();
+  const { userId, setUserId } = useContext(UserType);
 
+  //Add Medication
   const recordMedication = async () => {
     if (medicationName.trim() === '' || dosage.trim() === '' || time.trim() === '' || size.trim() === '') {
       alert('Please fill in all fields.');
       return;
     }
     try {
-      const response = await axios.post('http://10.0.14.153:8000/record-medication', {
+      const response = await axios.post('http://172.20.10.6:8000/medications', {
+        userId,
         time,
         dosage,
         medicationName,
         size,
       });
-      // Log the response data after a successful request
       console.log('Created:', response.data);
-      // You can perform additional actions here if needed
-      // Clear the input fields
+      // Clear input fields
       setMedicationName('');
       setDosage('');
       setTime('');
       setSize('');
-      // Show a success message or perform other actions
-      alert('Medication recorded successfully');
+      alert('บันทึกสำเร็จ');
     } catch (error) {
-      // Handle error, show an error message
       console.error('Error creating:', error);
-      alert('An error occurred while recording medication.');
+      // Log detailed error information
+      console.error('Error response data:', error.response?.data);
+      console.error('Error status code:', error.response?.status);
+      // Show an error alert with a user-friendly message
+      alert('An error occurred while recording medication. Please try again later.');
     }
   };
-
-  const ListHeader = () => {
-    return (
-      <View style={styles.header}>
-        <Text style={styles.textStyle}>แจ้งเตือนการกินยา</Text>
-      </View>
-    );
+  //Show Data
+  const fetchMedication = async (userId) => {
+    try {
+      const response = await axios.get(`http://172.20.10.6:8000/medications/${userId}`);
+      setMedicationRecords(response.data);
+      console.log('Fetched medication records:', response.data);
+    } catch (error) {
+      console.error('Error fetching medication records:', error);
+    }
   };
+  useEffect(() => {
+    fetchMedication(userId);
+  }, []);
+
+
 
   return (
-
-    <SafeAreaView style={styles.container}>
-      <ListHeader />
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         placeholder="เวลา (เช่น 06:00 น.)"
@@ -78,19 +89,38 @@ const DragScreen = () => {
         value={medicationName}
         onChangeText={setMedicationName}
       />
-
       <TextInput
         style={styles.input}
         placeholder="ขนาด (เช่น 1 เม็ด)"
         value={size}
         onChangeText={setSize}
       />
-
       <TouchableOpacity style={styles.recordButton} onPress={recordMedication}>
         <Text style={styles.buttonText}>บันทึก</Text>
       </TouchableOpacity>
+      <View style={styles.medicationInfo} >
+        <FlatList
+          data={medicationRecords}
+          keyExtractor={(item) => item._id}
+          renderItem={({ item }) => (
+            <View style={styles.medicationContainer}>
+              <View style={styles.infoContainer1}>
+                <Text style={styles.title1}>{item.time}</Text>
+                <Text style={styles.title1}>{item.medicationName} {item.size}</Text>
+                <Text style={styles.subtitle}>{item.dosage}</Text>
+              </View>
+              <TouchableOpacity
+                style={styles.editButton}>
+                <Text style={styles.editButtonText}>แก้ไข</Text>
+              </TouchableOpacity>
 
-    </SafeAreaView>
+            </View>
+          )}
+        />
+      </View>
+    </View>
+
+
   );
 };
 
@@ -98,15 +128,17 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    padding: 20,
+    backgroundColor: '#C2FFD3',
   },
   input: {
     width: '100%',
     height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
+    backgroundColor: '#FFFFFF',
     borderRadius: 5,
     paddingHorizontal: 10,
-    marginBottom: 15,
+    marginBottom: 20,
+    fontFamily: 'Kanit_400Regular',
   },
   recordButton: {
     backgroundColor: '#52B788',
@@ -118,18 +150,26 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 16,
     fontWeight: 'bold',
+    fontFamily: 'Kanit_400Regular',
   },
   medicationContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 1,
+    marginTop: 10,
     padding: 10,
     backgroundColor: '#F5F5F5',
     borderRadius: 10,
   },
   medicationInfo: {
     flex: 1,
+    width: '90%',
+    marginTop: 20
+  },
+  infoContainer1: {
+    flex: 1,
+
   },
   title1: {
     fontSize: 18,
@@ -144,23 +184,13 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 5,
+    justifyContent: 'center'
   },
   editButtonText: {
     color: 'white',
     fontSize: 12,
     fontWeight: 'bold',
-  },
-  header: {
-    width: '100%',
-    height: 45,
-    backgroundColor: '#52B788',
-  },
-  textStyle: {
-    textAlign: 'center',
-    color: '#fff',
-    fontSize: 18,
-    padding: 7,
-    fontFamily: 'Kanit_400Regular',
+    justifyContent: 'center'
   },
 });
 

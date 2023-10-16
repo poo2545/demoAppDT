@@ -97,6 +97,7 @@ logo: {
     width: 300,
     height: 100,
     marginBottom: '10%',
+    marginTop:20,
 },
 bg: {
     width: 320,

@@ -20,23 +20,23 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
-  useEffect(() => {
-    const checkLoginStatus = async () => {
-      try {
-        const token = await AsyncStorage.getItem("authToken");
+  // useEffect(() => {
+  //   const checkLoginStatus = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("authToken");
 
-        if (token) {
-          navigation.replace("Main");
-        } else {
-          // token not found , show the login screen itself
-        }
-      } catch (error) {
-        console.log("error", error);
-      }
-    };
+  //       if (token) {
+  //         navigation.replace("Main");
+  //       } else {
+  //         // token not found , show the login screen itself
+  //       }
+  //     } catch (error) {
+  //       console.log("error", error);
+  //     }
+  //   };
 
-    checkLoginStatus();
-  }, []);
+  //   checkLoginStatus();
+  // }, []);
 
 
   const handleLogin = () => {
@@ -46,7 +46,7 @@ const LoginScreen = () => {
     };
 
     axios
-      .post("http://10.0.14.153:8000/login", user)
+      .post("http://172.20.10.6:8000/login", user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;
@@ -105,7 +105,7 @@ if (!fontsLoaded) {
 
         <TouchableOpacity
             onPress={() => navigation.navigate('Forgot')} style={{ alignSelf: 'center', padding:18}} >
-            <Text style={styles.buttonText1}>ลืมรหัสผ่านใช่หรือไม่</Text>
+            <Text style={styles.buttonText1}></Text>
           </TouchableOpacity>
 
         <View style={styles.gradient} >
@@ -158,16 +158,16 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 100,
-    marginTop: 40
+    marginTop:30,
   },
   bg: {
-    width: 220,
-    height: 220,
+    width: 200,
+    height: 200,
+    marginTop:25,
   },
   inputContainer: {
     alignItems: 'center',
     width: '90%',
-
   },
   input: {
     backgroundColor: '#fff',
@@ -184,7 +184,7 @@ const styles = StyleSheet.create({
   bottomButtonContainer: {
     flex: 1,
     justifyContent: 'flex-end',
-    marginBottom: 20,
+    marginBottom: 30,
     width: '100%',
     alignItems: 'center'
   },
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '30%',
+    marginTop: '25%',
   },
   buttonTextRegis: {
     color: '#52B788',

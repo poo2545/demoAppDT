@@ -31,15 +31,14 @@ app.listen(port, () => {
 });
 
 const User = require("./models/user");
-const Message = require("./models/message");
+const Message = require("./models/message"); 
 
 //endpoint for registration of the user
-
 app.post("/register", (req, res) => {
-  const { name, email, password, image } = req.body;
+  const { name, email, password, image , dateOfBirth , weight , height , diabetesType } = req.body;
 
   // create a new User object
-  const newUser = new User({ name, email, password, image });
+  const newUser = new User({ name, email, password, image , dateOfBirth , weight , height , diabetesType });
 
   // save the user to the database
   newUser
@@ -53,14 +52,14 @@ app.post("/register", (req, res) => {
     });
 });
 
-//function to create a token for the user
+//function to create a token for the user ฟังก์ชั่นสร้างโทเค็นให้กับผู้ใช้
 const createToken = (userId) => {
-  // Set the token payload
+  // Set the token payload ตั้งค่าเพย์โหลดโทเค็น
   const payload = {
     userId: userId,
   };
 
-  // Generate the token with a secret key and expiration time
+  // Generate the token with a secret key and expiration time  สร้างโทเค็นด้วยรหัสลับและเวลาหมดอายุ
   const token = jwt.sign(payload, "Q$r2K6W8n!jCW%Zk", { expiresIn: "1h" });
 
   return token;
@@ -99,7 +98,7 @@ app.post("/login", (req, res) => {
     });
 });
 
-//endpoint to access all the users except the user who's is currently logged in!
+//endpoint to access all the users except the user who's is currently logged in! endpoint เพื่อเข้าถึงผู้ใช้ทั้งหมด ยกเว้นผู้ใช้ที่เข้าสู่ระบบอยู่ในปัจจุบัน!
 app.get("/users/:userId", (req, res) => {
   const loggedInUserId = req.params.userId;
 
@@ -113,7 +112,7 @@ app.get("/users/:userId", (req, res) => {
     });
 });
 
-//endpoint to send a request to a user
+//endpoint to send a request to a user เพื่อส่งคำขอไปยังผู้ใช้
 app.post("/friend-request", async (req, res) => {
   const { currentUserId, selectedUserId } = req.body;
 
@@ -215,7 +214,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-//endpoint to post Messages and store it in the backend
+//endpoint to post Messages and store it in the backend endpoint เพื่อโพสต์ข้อความและเก็บไว้ในแบ็กเอนด์
 app.post("/messages", upload.single("imageFile"), async (req, res) => {
   try {
     const { senderId, recepientId, messageType, messageText } = req.body;
@@ -324,59 +323,190 @@ app.get("/friends/:userId",(req,res) => {
   }
 })
 
-
-//food
-const Food = require('./models/food');
-
-// Create a new food item
-app.post('/foods', async (req, res) => {
+app.get("/profile/:userId", async (req, res) => {
   try {
-    const {date, name, calorie,protein,fat,carbohydrate } = req.body;
-    const food = new Food({date, name, calorie,protein,fat,carbohydrate });
-    const savedFood = await food.save();
-    res.json(savedFood);
-  } catch (error) {
-    res.status(500).json({ error: 'Unable to create food item' });
-  }
-})
+    const userId = req.params.userId;
 
-// Get all food items
-app.get('/foods', async (req, res) => {
-  try {
-    const foods = await Food.find();
-    res.json(foods);
-  } catch (error) {
-    res.status(500).json({ error: 'Unable to fetch food items' });
-  }
-})
+    const user = await User.findById(userId);
 
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // ดึงข้อมูลจาก user
+    const { image, dateOfBirth, weight, height, diabetesType, ...userData } = user.toObject();
+
+    return res.status(200).json({ user: userData, image, dateOfBirth, weight, height, diabetesType });
+  } catch (error) {
+    res.status(500).json({ message: "Error while getting the profile" });
+  }
+});
+
+
+
+//Finish
 
 const Medication = require('./models/medication');
-// Create a new medication record
-app.post('/record-medication', async (req, res) => {
+//เพิ่ม
+app.post('/medications', async (req, res) => {
   try {
-    const { time, dosage, medicationName, size } = req.body;
-    const medication = new Medication({
+    const { time, dosage, medicationName, size, userId } = req.body;
+
+    // Check if userId is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+
+    // Create a new medication object
+    const newMedication = new Medication({
       time,
       dosage,
       medicationName,
       size,
+      user: userId, // Associate the medication with a user
     });
-    const savedMedication = await medication.save();
-    res.json(savedMedication);
-    res.status(201).json({ message: 'Medication record saved successfully' });
+
+    // Save the medication to the database
+    await newMedication.save();
+
+    // Respond with a success message and the saved medication
+    res.status(201).json({
+      message: 'Medication record saved successfully',
+      medication: newMedication,
+    });
   } catch (error) {
+    console.error('Error saving medication record:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
-})
-
-// Define a route to get all medication records
-app.get('/medication-records', async (req, res) => {
+});
+//fetch
+app.get('/medications/:userId', async (req, res) => {
   try {
-    const medications = await Medication.find();
-    res.json(medications);
-  } catch (error) {
-    res.status(500).json({ error: 'Unable to fetch food items' });
-  }
-})
+    const userId = req.params.userId;
 
+    // Check if userId is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+
+    // Find medication records associated with the user
+    const medications = await Medication.find({ user: userId });
+
+    if (medications.length === 0) {
+      // No medications found for the user
+      return res.status(404).json({ message: 'No medication records found for this user' });
+    }
+
+    res.status(200).json(medications);
+  } catch (error) {
+    console.error('Error fetching medication records:', error);
+    res.status(500).json({ error: 'Unable to fetch medication records' });
+  }
+});
+//edit
+app.put('/medications/:id', async (req, res) => {
+  try {
+    const medicationId = req.params.id;
+    const { medicationName, dosage, time, size } = req.body;
+    // Validate the request data here...
+    const updatedMedication = await Medication.findByIdAndUpdate(
+      medicationId,
+      { medicationName, dosage, time, size },
+      { new: true }
+    );
+
+    if (!updatedMedication) {
+      return res.status(404).json({ message: 'Medication record not found' });
+    }
+
+    res.status(200).json({
+      message: 'Medication record updated successfully',
+      medication: updatedMedication,
+    });
+  } catch (error) {
+    console.error('Error updating medication record:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.delete('/medications/:id', async (req, res) => {
+  try {
+    const medicationId = req.params.id;
+    
+    // Find and delete the medication by ID
+    const deletedMedication = await Medication.findByIdAndRemove(medicationId);
+
+    if (!deletedMedication) {
+      return res.status(404).json({ message: 'Medication record not found' });
+    }
+
+    res.status(200).json({
+      message: 'Medication record deleted successfully',
+      deletedMedication,
+    });
+  } catch (error) {
+    console.error('Error deleting medication record:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
+//Meal 
+const Meal = require('./models/meal'); // Import your PatientMeal model here
+//Add
+// Create a new patient meal
+app.post('/patientMeals', async (req, res) => {
+  try {
+    const { mealName, calories, nutrientsProtien, nutrientsFat, nutrientsCabohidrat , nutrientsFiber , date , userId } = req.body;
+
+    // Check if userId is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+
+    // Create a new medication object
+    const newMeal = new Meal({
+      mealName,
+      calories,
+      nutrientsProtien,
+      nutrientsFat,
+      nutrientsCabohidrat,
+      date,
+      nutrientsFiber,
+      user: userId, // Associate the medication with a user
+    });
+
+    // Save the medication to the database
+    await newMeal.save();
+
+    // Respond with a success message and the saved medication
+    res.status(201).json({
+      message: 'Meal record saved successfully',
+      Meal: newMeal,
+    });
+  } catch (error) {
+    console.error('Error saving newMeal record:', error);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+//fetch
+app.get('/patientMeals/:userId', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    // Check if userId is valid
+    if (!mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: "Invalid userId" });
+    }
+    // Find medication records associated with the user
+    const meal = await Meal.find({ user: userId });
+    if (meal.length === 0) {
+      // No medications found for the user
+      return res.status(404).json({ message: 'No meal records found for this user' });
+    }
+    res.status(200).json(meal);
+  } catch (error) {
+    console.error('Error fetching meal records:', error);
+    res.status(500).json({ error: 'Unable to fetch meal records' });
+  }
+});

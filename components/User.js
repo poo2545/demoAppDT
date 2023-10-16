@@ -11,7 +11,7 @@ const User = ({ item }) => {
     const fetchFriendRequests = async () => {
       try {
         const response = await fetch(
-          `http://10.0.14.153:8000/friend-requests/sent/${userId}`
+          `http://172.20.10.6:8000/friend-requests/sent/${userId}`
         );
 
         const data = await response.json();
@@ -31,7 +31,7 @@ const User = ({ item }) => {
   useEffect(() => {
     const fetchUserFriends = async () => {
       try {
-        const response = await fetch(`http://10.0.14.153:8000/friends/${userId}`);
+        const response = await fetch(`http://172.20.10.6:8000/friends/${userId}`);
 
         const data = await response.json();
 
@@ -49,7 +49,7 @@ const User = ({ item }) => {
   }, []);
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch("http://10.0.14.153:8000/friend-request", {
+      const response = await fetch("http://172.20.10.6:8000/friend-request", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,19 +83,19 @@ const User = ({ item }) => {
       </View>
 
       <View style={{ marginLeft: 12, flex: 1 }}>
-        <Text style={{ fontWeight: "bold" , fontFamily: 'Kanit_400Regular', }}>{item?.name}</Text>
-        <Text style={{ marginTop: 4, color: "gray" , fontFamily: 'Kanit_400Regular',}}>{item?.email}</Text>
+        <Text style={{ fontFamily: 'Kanit_400Regular', }}>{item?.name}</Text>
+        <Text style={{ marginTop: 4, color: "gray" , fontFamily: 'Kanit_400Regular', }}>{item?.email}</Text>
       </View>     
       {userFriends.includes(item._id) ? (
         <Pressable
           style={{
-            backgroundColor: "#52B788",
+            backgroundColor: "#82CD47",
             padding: 10,
             width: 105,
             borderRadius: 6,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white" , fontFamily: 'Kanit_400Regular',}}>เพื่อน</Text>
+          <Text style={{ textAlign: "center", color: "white",fontFamily: 'Kanit_400Regular', }}>เพื่อน</Text>
         </Pressable>
       ) : requestSent || friendRequests.some((friend) => friend._id === item._id) ? (
         <Pressable
@@ -106,7 +106,7 @@ const User = ({ item }) => {
             borderRadius: 6,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 13 , fontFamily: 'Kanit_400Regular',}}>
+          <Text style={{ textAlign: "center", color: "white", fontSize: 13 , fontFamily: 'Kanit_400Regular', }}>
           ส่งคำขอแล้ว
           </Text>
         </Pressable>
@@ -114,14 +114,14 @@ const User = ({ item }) => {
         <Pressable
           onPress={() => sendFriendRequest(userId, item._id)}
           style={{
-            backgroundColor: "#52B788",
+            backgroundColor: "#567189",
             padding: 10,
             borderRadius: 6,
             width: 105,
           }}
         >
-          <Text style={{ textAlign: "center", color: "white", fontSize: 13 , fontFamily: 'Kanit_400Regular',}}>
-           เพิ่มเป็นเพื่อน
+          <Text style={{ textAlign: "center", color: "white", fontSize: 13 , fontFamily: 'Kanit_400Regular' }}>
+             เพิ่มเพื่อน
           </Text>
         </Pressable>
       )}

@@ -56,7 +56,7 @@ const ChatMessagesScreen = () => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://10.0.14.153:8000/messages/${userId}/${recepientId}`
+        `http://172.20.10.6:8000/messages/${userId}/${recepientId}`
       );
       const data = await response.json();
 
@@ -78,7 +78,7 @@ const ChatMessagesScreen = () => {
     const fetchRecepientData = async () => {
       try {
         const response = await fetch(
-          `http://10.0.14.153:8000/user/${recepientId}`
+          `http://172.20.10.6:8000/user/${recepientId}`
         );
 
         const data = await response.json();
@@ -109,7 +109,7 @@ const ChatMessagesScreen = () => {
         formData.append("messageText", message);
       }
 
-      const response = await fetch("http://10.0.14.153:8000/messages", {
+      const response = await fetch("http://172.20.10.6:8000/messages", {
         method: "POST",
         body: formData,
       });
@@ -140,23 +140,23 @@ const ChatMessagesScreen = () => {
 
           {selectedMessages.length > 0 ? (
             <View>
-              <Text style={{ fontSize: 16, fontWeight: "500" }}>
+              <Text style={{ fontSize: 16, fontWeight: "500" ,fontFamily: 'Kanit_400Regular',}}>
                 {selectedMessages.length}
               </Text>
             </View>
           ) : (
-            <View style={{ flexDirection: "row", alignItems: "center" }}>
+            <View style={{ flexDirection: "row", alignItems: "center" , }}>
               <Image
                 style={{
                   width: 30,
                   height: 30,
-                  borderRadius: 15,
+                  borderRadius: 40,
                   resizeMode: "cover",
                 }}
                 source={{ uri: recepientData?.image }}
               />
 
-              <Text style={{ marginLeft: 5, fontSize: 15, fontWeight: "bold" }}>
+              <Text style={{ marginLeft: 5, fontSize: 18, fontWeight: "bold" , fontFamily: 'Kanit_400Regular', }}>
                 {recepientData?.name}
               </Text>
             </View>
@@ -166,9 +166,6 @@ const ChatMessagesScreen = () => {
       headerRight: () =>
         selectedMessages.length > 0 ? (
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Ionicons name="md-arrow-redo-sharp" size={24} color="black" />
-            <Ionicons name="md-arrow-undo" size={24} color="black" />
-            <FontAwesome name="star" size={24} color="black" />
             <MaterialIcons
               onPress={() => deleteMessages(selectedMessages)}
               name="delete"
@@ -182,7 +179,7 @@ const ChatMessagesScreen = () => {
 
   const deleteMessages = async (messageIds) => {
     try {
-      const response = await fetch("http://10.0.14.153:8000/deleteMessages", {
+      const response = await fetch("http://172.20.10.6:8000/deleteMessages", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,7 +233,7 @@ const ChatMessagesScreen = () => {
     }
   };
   return (
-    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#F0F0F0" }}>
+    <KeyboardAvoidingView style={{ flex: 1, backgroundColor: "#C2FFD3" }}>
       <ScrollView ref={scrollViewRef} contentContainerStyle={{flexGrow:1}} onContentSizeChange={handleContentSizeChange}>
         {messages.map((item, index) => {
           if (item.messageType === "text") {
@@ -249,19 +246,24 @@ const ChatMessagesScreen = () => {
                   item?.senderId?._id === userId
                     ? {
                         alignSelf: "flex-end",
-                        backgroundColor: "#DCF8C6",
+                        backgroundColor: "#52B788",
                         padding: 8,
                         maxWidth: "60%",
                         borderRadius: 7,
                         margin: 10,
+                        borderColor:'white',
+                        borderWidth: 2, 
                       }
                     : {
                         alignSelf: "flex-start",
                         backgroundColor: "white",
+                        borderColor:'#52B788',
+                        borderWidth: 2,     
                         padding: 8,
                         margin: 10,
                         borderRadius: 7,
                         maxWidth: "60%",
+                        
                       },
 
                   isSelected && { width: "100%", backgroundColor: "#F0FFFF" },
@@ -269,8 +271,8 @@ const ChatMessagesScreen = () => {
               >
                 <Text
                   style={{
-                    fontSize: 13,
-                    textAlign: isSelected ? "right" : "left",
+                    fontSize: 15,
+                    textAlign: isSelected ? "right" : "left",fontFamily: 'Kanit_400Regular',
                   }}
                 >
                   {item?.message}
@@ -280,7 +282,7 @@ const ChatMessagesScreen = () => {
                     textAlign: "right",
                     fontSize: 9,
                     color: "gray",
-                    marginTop: 5,
+                    marginTop: 5,  fontFamily: 'Kanit_400Regular',
                   }}
                 >
                   {formatTime(item.timeStamp)}
@@ -291,7 +293,7 @@ const ChatMessagesScreen = () => {
 
           if (item.messageType === "image") {
             const baseUrl =
-              "/Users/sujananand/Build/messenger-project/api/files/";
+              "C:\gitClone\UpdateProjectDT\api\files";
             const imageUrl = item.imageUrl;
             const filename = imageUrl.split("/").pop();
             const source = { uri: baseUrl + filename };
@@ -302,11 +304,13 @@ const ChatMessagesScreen = () => {
                   item?.senderId?._id === userId
                     ? {
                         alignSelf: "flex-end",
-                        backgroundColor: "#DCF8C6",
+                        backgroundColor: "#52B788",
                         padding: 8,
                         maxWidth: "60%",
                         borderRadius: 7,
                         margin: 10,
+                        borderColor:'white',
+                        borderWidth: 2, 
                       }
                     : {
                         alignSelf: "flex-start",
@@ -330,8 +334,9 @@ const ChatMessagesScreen = () => {
                       position: "absolute",
                       right: 10,
                       bottom: 7,
-                      color: "white",
+                      color: "gray",
                       marginTop: 5,
+                      fontFamily: 'Kanit_400Regular',
                     }}
                   >
                     {formatTime(item?.timeStamp)}
@@ -347,11 +352,10 @@ const ChatMessagesScreen = () => {
         style={{
           flexDirection: "row",
           alignItems: "center",
-          paddingHorizontal: 10,
-          paddingVertical: 10,
-          borderTopWidth: 1,
-          borderTopColor: "#dddddd",
+          paddingHorizontal: 15,
+          paddingVertical: 15,
           marginBottom: showEmojiSelector ? 0 : 25,
+          backgroundColor:'#C2FFD3'
         }}
       >
         <Entypo
@@ -359,7 +363,7 @@ const ChatMessagesScreen = () => {
           style={{ marginRight: 5 }}
           name="emoji-happy"
           size={24}
-          color="gray"
+          color="#8D8D8D"
         />
 
         <TextInput
@@ -369,11 +373,11 @@ const ChatMessagesScreen = () => {
             flex: 1,
             height: 40,
             borderWidth: 1,
-            borderColor: "#dddddd",
+            borderColor: "#8D8D8D",
             borderRadius: 20,
-            paddingHorizontal: 10,
+            paddingHorizontal: 10,fontFamily: 'Kanit_400Regular',
           }}
-          placeholder="Type Your message..."
+          placeholder="Aa"
         />
 
         <View
@@ -384,15 +388,13 @@ const ChatMessagesScreen = () => {
             marginHorizontal: 8,
           }}
         >
-          <Entypo onPress={pickImage} name="camera" size={24} color="gray" />
-
-          <Feather name="mic" size={24} color="gray" />
+          <Entypo onPress={pickImage} name="camera" size={24} color="#8D8D8D" />
         </View>
 
         <Pressable
           onPress={() => handleSend("text")}
           style={{
-            backgroundColor: "#007bff",
+            backgroundColor: "#52B788",
             paddingVertical: 8,
             paddingHorizontal: 12,
             borderRadius: 20,

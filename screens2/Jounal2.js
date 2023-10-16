@@ -16,7 +16,7 @@ const CreateFoodScreen = () => {
 
   const createFood = async () => {
     try {
-      const response = await axios.post('http://10.0.14.153:8000/foods', { name,calorie,protein,fat,carbohydrate,currentDate });
+      const response = await axios.post('http://172.20.10.6:8000/foods', { name,calorie,protein,fat,carbohydrate,currentDate });
       // Handle success, maybe show a success message
       console.log('Food created:', response.data);
       navigation.navigate('FoodList'); // Navigate back to the food list

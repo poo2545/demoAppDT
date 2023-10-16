@@ -1,15 +1,27 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-import React, { useContext } from "react";
+import React, { useContext  , useLayoutEffect } from "react";
 import { UserType } from "../UserContext";
 import { useNavigation } from "@react-navigation/native";
 
 const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
   const { userId, setUserId } = useContext(UserType);
   const navigation = useNavigation();
+
+    useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={{ fontSize: 20, fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>คำขอเป็นเพื่อน</Text>
+      ),
+      headerStyle: {
+        backgroundColor: '#FFFFFF',
+      },
+    });
+  }, []);
+
   const acceptRequest = async (friendRequestId) => {
     try {
       const response = await fetch(
-        "http://10.0.14.153:8000/friend-request/accept",
+        "http://172.20.10.6:8000/friend-request/accept",
         {
           method: "POST",
           headers: {
@@ -39,8 +51,13 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        marginVertical: 10,
-        
+        backgroundColor:'white',
+        borderWidth: 0.7,
+        borderColor: "#D0D0D0",
+        borderTopWidth: 0,
+        borderLeftWidth: 0,
+        borderRightWidth: 0,
+        padding: 10,
       }}
     >
       <Image

@@ -8,7 +8,7 @@ const TabMenu = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารเช้า</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารว่าง</Text>
       ),
       headerStyle: {
         backgroundColor: 'white',
@@ -16,7 +16,7 @@ const TabMenu = () => {
     });
   }, []);
   const navigation = useNavigation();
-  const [activeTab, setActiveTab] = useState('Tab1'); // Initial active tab
+  const [activeTab, setActiveTab] = useState('Tab1'); //v Initial active tab
   const handleTabPress = (tabName) => {
     setActiveTab(tabName);
   };

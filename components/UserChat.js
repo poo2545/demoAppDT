@@ -1,5 +1,5 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState,useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserType } from "../UserContext";
 
@@ -7,10 +7,20 @@ const UserChat = ({ item }) => {
   const { userId, setUserId } = useContext(UserType);
   const [messages, setMessages] = useState([]);
   const navigation = useNavigation();
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={{ fontSize: 20, fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>แชท</Text>
+      ),
+      headerStyle: {
+        backgroundColor: '#FFFFFF',
+      },
+    });
+  }, []);
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://10.0.14.153:8000/messages/${userId}/${item._id}`
+        `http://172.20.10.6:8000/messages/${userId}/${item._id}`
       );
       const data = await response.json();
 
@@ -45,6 +55,7 @@ const UserChat = ({ item }) => {
     return new Date(time).toLocaleString("en-US", options);
   };
   return (
+    
     <Pressable
       onPress={() =>
         navigation.navigate("Messages", {
@@ -57,6 +68,7 @@ const UserChat = ({ item }) => {
         gap: 10,
         borderWidth: 0.7,
         borderColor: "#D0D0D0",
+        backgroundColor:'white',
         borderTopWidth: 0,
         borderLeftWidth: 0,
         borderRightWidth: 0,
@@ -69,16 +81,16 @@ const UserChat = ({ item }) => {
       />
 
       <View style={{ flex: 1 }}>
-        <Text style={{ fontSize: 15, fontWeight: "500" }}>{item?.name}</Text>
+        <Text style={{ fontSize: 15, fontWeight: "500" , fontFamily: 'Kanit_400Regular',}}>{item?.name}</Text>
         {lastMessage && (
-          <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" }}>
+          <Text style={{ marginTop: 3, color: "gray", fontWeight: "500" , fontFamily: 'Kanit_400Regular',}}>
             {lastMessage?.message}
           </Text>
         )}
       </View>
 
       <View>
-        <Text style={{ fontSize: 11, fontWeight: "400", color: "#585858" }}>
+        <Text style={{ fontSize: 11, fontWeight: "400", color: "#585858" , fontFamily: 'Kanit_400Regular' }}>
           {lastMessage && formatTime(lastMessage?.timeStamp)}
         </Text>
       </View>

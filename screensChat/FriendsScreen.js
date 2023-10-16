@@ -1,13 +1,25 @@
-import { StyleSheet, Text, View } from "react-native";
-import React, { useEffect, useContext, useState } from "react";
+import { StyleSheet, Text, View,SafeAreaView } from "react-native";
+import React, { useEffect, useContext, useState , useLayoutEffect} from "react";
 import axios from "axios";
 import { UserType } from "../UserContext";
 import FriendRequest from "../components/FriendRequest";
+import { useNavigation } from "@react-navigation/native";
 
 const FriendsScreen = () => {
   const { userId, setUserId } = useContext(UserType); // Use useContext to access the context
-
   const [friendRequests, setFriendRequests] = useState([]);
+  const navigation = useNavigation();
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={{ fontSize: 20, fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>คำขอเป็นเพื่อน</Text>
+      ),
+      headerStyle: {
+        backgroundColor: '#FFFFFF',
+      },
+    });
+  }, []);
 
   useEffect(() => {
     fetchFriendRequests();
@@ -16,7 +28,7 @@ const FriendsScreen = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `http://10.0.14.153:8000/friend-request/${userId}`
+        `http://172.20.10.6:8000/friend-request/${userId}`
       );
       if (response.status === 200) {
         const friendRequestsData = response.data.map((friendRequest) => ({
@@ -36,7 +48,8 @@ const FriendsScreen = () => {
   console.log(friendRequests);
 
   return (
-    <View style={{ padding: 10, marginHorizontal: 12 }}>
+    <SafeAreaView style={{backgroundColor:'#C2FFD3' , flex: 1  }}>
+      <View style={{ padding: 10, marginHorizontal: 12 }}>
       {friendRequests.length > 0 && <Text style={{fontFamily: 'Kanit_400Regular'}}>คำขอเป็นเพื่อน</Text>}
 
       {friendRequests.map((item, index) => (
@@ -47,7 +60,8 @@ const FriendsScreen = () => {
           setFriendRequests={setFriendRequests}
         />
       ))}
-    </View>
+      </View>
+    </SafeAreaView>
   );
 };
 

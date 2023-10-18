@@ -14,13 +14,23 @@ const HomePage = () => {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: () => (
-                <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>FOR YOU</Text>
+                <Text style={{ fontSize: 20, fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>สำหรับคุณ</Text>
             ),
             headerStyle: {
                 backgroundColor: '#FFFFFF',
             },
         });
     }, []);
+
+    const RecommendFood = () => {
+        // You can navigate to the profile editing screen here.
+        navigation.navigate("RecommendFood");
+      }
+
+      const RecommenFood2 = () => {
+        // You can navigate to the profile editing screen here.
+        navigation.navigate("RecommenFood2");
+      }
 
     return (
         <SafeAreaView style={styles.container}>
@@ -34,12 +44,15 @@ const HomePage = () => {
             </View>
             <View style={styles.inputContainerrecomend}>
                 <Text style={{ marginTop: 20, fontFamily: 'Kanit_400Regular', fontSize: 10 }} > แนะนำอื่นๆ </Text>
-                <TouchableOpacity style={styles.button22}>
+
+                <TouchableOpacity style={styles.button22} onPress={RecommendFood} >
                     <Text style={styles.buttonText22}>อาหารที่ควรงด</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.button22}>
+
+                <TouchableOpacity style={styles.button22} onpress={RecommendFood}>
                     <Text style={styles.buttonText22}>อาหารที่แนะนำ</Text>
                 </TouchableOpacity>
+                
             </View>
         </SafeAreaView>
     );

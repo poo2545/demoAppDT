@@ -4,12 +4,14 @@ import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import { LineChart } from 'react-native-chart-kit';
+import NutrientsGraph from '../components/NutrientsGraph';
 
 const JounalFood = () => {
   const navigation = useNavigation();
   const [foods, setFoods] = useState([]);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isCalendarVisible, setCalendarVisible] = useState(false);
+  const graphData = [1650, 1500, 1652, 1858, 1534, 1550 , 1805 ];
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -40,24 +42,6 @@ const JounalFood = () => {
     setCalendarVisible(false);
   };
 
-  const data = {
-    labels: ['1 ต.ค', '2 ต.ค', '3 ต.ค', '4 ต.ค', '5 ต.ค', '6 ต.ค'],
-    datasets: [
-      {
-        data: [1650, 1500, 1452, 1258, 1234, 1450],
-        color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Line color
-        strokeWidth: 2, // Line width
-      },
-    ],
-  };
-
-  const chartConfig = {
-    backgroundGradientFrom: '#fff', // Background gradient color
-    backgroundGradientTo: '#fff',
-    color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Text color
-    strokeWidth: 2, // Line width
-    barPercentage: 0.5,
-  };
 
   return (
     <ScrollView style={{ backgroundColor: '#C2FFD3' }}>
@@ -111,7 +95,7 @@ const JounalFood = () => {
         </View>
         <View style={styles.container}>
           <View style={styles.row}>
-            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('AddFood')} >
+            <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Breakfast')} >
               <Text style={styles.buttonText}>อาหารเช้า</Text>
               <Image source={require('../assets/13.png')}
                 style={{ width: 100, height: 100 }} />
@@ -177,12 +161,7 @@ const JounalFood = () => {
             <View style={styles.containerGraph}>
               <View style={{justifyContent: 'center',alignItems: 'center',marginTop: 8}}>
                 <Text style={{ color: '#8B8383', fontSize: 20, fontFamily: 'Kanit_400Regular',marginTop: 8 }}>ปริมาณแคลอรี่ที่ได้รับต่อวัน</Text>
-                <LineChart
-                  data={data}
-                  width={350}
-                  height={200}
-                  chartConfig={chartConfig}
-                />
+                 <NutrientsGraph data={graphData} />
               </View>
             </View>
           </View>

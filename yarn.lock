@@ -1832,14 +1832,14 @@
 
 "@react-native-community/datetimepicker@6.7.3":
   version "6.7.3"
-  resolved "https://registry.yarnpkg.com/@react-native-community/datetimepicker/-/datetimepicker-6.7.3.tgz#e6d75a42729265d8404d1d668c86926564abca2f"
+  resolved "https://registry.npmjs.org/@react-native-community/datetimepicker/-/datetimepicker-6.7.3.tgz"
   integrity sha512-fXWbEdHMLW/e8cts3snEsbOTbnFXfUHeO2pkiDFX3fWpFoDtUrRWvn50xbY13IJUUKHDhoJ+mj24nMRVIXfX1A==
   dependencies:
     invariant "^2.2.4"
 
 "@react-native-picker/picker@2.4.8":
   version "2.4.8"
-  resolved "https://registry.yarnpkg.com/@react-native-picker/picker/-/picker-2.4.8.tgz#a1a21f3d6ecadedbc3f0b691a444ddd7baa081f8"
+  resolved "https://registry.npmjs.org/@react-native-picker/picker/-/picker-2.4.8.tgz"
   integrity sha512-5NQ5XPo1B03YNqKFrV6h9L3CQaHlB80wd4ETHUEABRP2iLh7FHLVObX2GfziD+K/VJb8G4KZcZ23NFBFP1f7bg==
 
 "@react-native/assets@1.0.0":
@@ -3349,6 +3349,13 @@ expo-constants@~14.3.0:
   dependencies:
     "@expo/config" "~8.0.0"
     uuid "^3.3.2"
+
+expo-device@~5.2.1:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/expo-device/-/expo-device-5.2.1.tgz#2962abdb9682e5b991a82836667f2e7d7103d9ef"
+  integrity sha512-ZWGph+fGQPxo9v2e0YygPb45Hl+ZR3mh4tpLY5AOYK/sNjQy+Lu3T/sLGIdi2TOcYNL2oZwzZ6eGvwVYmdIfLg==
+  dependencies:
+    ua-parser-js "^0.7.33"
 
 expo-file-system@~15.2.2:
   version "15.2.2"
@@ -5962,6 +5969,11 @@ react-native-gradle-plugin@^0.71.19:
   resolved "https://registry.npmjs.org/react-native-gradle-plugin/-/react-native-gradle-plugin-0.71.19.tgz"
   integrity sha512-1dVk9NwhoyKHCSxcrM6vY6cxmojeATsBobDicX0ZKr7DgUF2cBQRTKsimQFvzH8XhOVXyH8p4HyDSZNIFI8OlQ==
 
+react-native-image-picker@^7.0.1:
+  version "7.0.1"
+  resolved "https://registry.npmjs.org/react-native-image-picker/-/react-native-image-picker-7.0.1.tgz"
+  integrity sha512-WACwhGCGlHvRzwFS4OjVKbkVMLx95f6g3ouaZ1IQM1LO7zq4Ytn1iBkOja8KkutV10E9B+IitgoWL3VUpuRl7Q==
+
 react-native-push-notification@^8.1.1:
   version "8.1.1"
   resolved "https://registry.npmjs.org/react-native-push-notification/-/react-native-push-notification-8.1.1.tgz"
@@ -7021,7 +7033,7 @@ type-is@~1.6.18:
     media-typer "0.3.0"
     mime-types "~2.1.24"
 
-ua-parser-js@^0.7.30:
+ua-parser-js@^0.7.30, ua-parser-js@^0.7.33:
   version "0.7.36"
   resolved "https://registry.npmjs.org/ua-parser-js/-/ua-parser-js-0.7.36.tgz"
   integrity sha512-CPPLoCts2p7D8VbybttE3P2ylv0OBZEAy7a12DsulIEcAiMtWJy+PBgMXgWDI80D5UwqE8oQPHYnk13tm38M2Q==

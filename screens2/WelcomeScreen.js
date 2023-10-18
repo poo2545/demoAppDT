@@ -40,6 +40,8 @@ const WelcomeScreen = () => {
 
             <Text style={styles._Intro}>
                 แอปที่ช่วยบริการจัดการรายการอาหารสำหรับผู้ป่วยโรคเบาหวาน
+            </Text>
+            <Text style={styles._Intro}>
                 ช่วยให้คำแนะนำเมนูที่เหมาะสมและอาหารที่ควรงด
             </Text>
 
@@ -75,7 +77,7 @@ _DiabetesControl: {
 _Intro: {
     color: '#666',
     fontSize: 15,
-    marginBottom: 20,
+    marginBottom: 5,
     textAlign: 'center',
     fontFamily:'Kanit_400Regular',
 },

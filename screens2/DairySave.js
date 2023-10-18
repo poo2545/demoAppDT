@@ -1,22 +1,21 @@
 import { View, Text, StyleSheet, Image } from 'react-native'
-import React from 'react'
+import React, { useState, useLayoutEffect, useEffect } from 'react';
 
 const DairySave = () => {
     const [mealRecords, setMealRecords] = useState([]);
-    const fetchMeal = async (userId) => {
-        try {
-          const response = await axios.get(`http://172.20.10.6:8000/patientMeals/${userId}`);
-          setMealRecords(response.data);
-          console.log('Fetched meal records:', response.data);
-        } catch (error) {
-          console.error('Error fetching meal records:', error);
-        }
-      };
+    // const fetchMeal = async (userId) => {
+    //     try {
+    //       const response = await axios.get(`http://10.0.14.153:8000/patientMeals/${userId}`);
+    //       setMealRecords(response.data);
+    //       console.log('Fetched meal records:', response.data);
+    //     } catch (error) {
+    //       console.error('Error fetching meal records:', error);
+    //     }
+    //   };
     
-      useEffect(() => {
-        fetchMeal(userId);
-      }, []);
-
+    //   useEffect(() => {
+    //     fetchMeal(userId);
+    //   }, []);
       
     return (
         <View style={styles.container}>

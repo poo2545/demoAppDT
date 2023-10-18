@@ -21,7 +21,7 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
   const acceptRequest = async (friendRequestId) => {
     try {
       const response = await fetch(
-        "http://172.20.10.6:8000/friend-request/accept",
+        "http://10.0.14.153:8000/friend-request/accept",
         {
           method: "POST",
           headers: {
@@ -66,7 +66,7 @@ const FriendRequest = ({ item, friendRequests, setFriendRequests }) => {
       />
 
       <Text
-        style={{ fontSize: 15, fontWeight: "bold", marginLeft: 10, flex: 1 ,  fontFamily: 'Kanit_400Regular', }}>
+        style={{ fontSize: 15, marginLeft: 10, flex: 1 ,  fontFamily: 'Kanit_400Regular', }}>
         {item?.name} ส่งคำร้องขอเป็นเพื่อนกับคุณ 
       </Text>
 

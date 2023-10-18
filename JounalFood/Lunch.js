@@ -1,5 +1,5 @@
-import React, { useState, useLayoutEffect , useContext } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image, SafeAreaView } from 'react-native';
+import React, { useState, useLayoutEffect , useContext , useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, TextInput, Image, SafeAreaView , ActivityIndicator , FlatList } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { Ionicons } from "@expo/vector-icons";
 import { UserType } from '../UserContext';
@@ -9,7 +9,7 @@ const TabMenu = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารเย็น</Text>
+        <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารกลางวัน</Text>
       ),
       headerStyle: {
         backgroundColor: 'white',
@@ -56,7 +56,37 @@ const TabMenu = () => {
       alert('An error occurred while recording medication. Please try again later.');
     }
   };
-  
+
+  const [foods, setFoods] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  useEffect(() => {
+    async function fetchFoodData() {
+      try {
+        const response = await fetch('http://172.20.10.6:8000/food');
+        const data = await response.json();
+
+        if (response.status === 200) {
+          setFoods(data);
+        } else {
+          console.error('Failed to fetch food data');
+        }
+      } catch (error) {
+        console.error('An error occurred:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchFoodData();
+  }, []); // Empty dependency array to run the effect only once
+  if (isLoading) {
+    return (
+      <View>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.tabMenu}>
@@ -90,6 +120,24 @@ const TabMenu = () => {
               placeholder="ค้นหารายการอาหาร..."
             />
           </View>
+
+          <View>
+          <FlatList
+      data={foods}
+      keyExtractor={(food) => food.FoodName} // Use a unique identifier
+      renderItem={({ item }) => (
+        <View style={styles.foodContainer}>
+          <Text style={styles.foodName}>Food Name: {item.FoodName}</Text>
+          <Text>Protein: {item.FoodProtein}g</Text>
+          <Text>Fat: {item.FoodFat}g</Text>
+          <Text>Carbohydrates: {item.FoodCarbo}g</Text>
+          <Text>Fiber: {item.FoodFiber}g</Text>
+          <Text>Calories: {item.FoodCalorie}</Text>
+        </View>
+      )}
+    />
+    </View>
+
         </View>
       }
 

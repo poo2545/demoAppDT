@@ -20,23 +20,23 @@ const LoginScreen = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigation = useNavigation();
 
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const token = await AsyncStorage.getItem("authToken");
+  useEffect(() => {
+    const checkLoginStatus = async () => {
+      try {
+        const token = await AsyncStorage.getItem("authToken");
 
-  //       if (token) {
-  //         navigation.replace("Main");
-  //       } else {
-  //         // token not found , show the login screen itself
-  //       }
-  //     } catch (error) {
-  //       console.log("error", error);
-  //     }
-  //   };
+        if (token) {
+          navigation.replace("Main");
+        } else {
+          // token not found , show the login screen itself
+        }
+      } catch (error) {
+        console.log("error", error);
+      }
+    };
 
-  //   checkLoginStatus();
-  // }, []);
+    checkLoginStatus();
+  }, []);
 
 
   const handleLogin = () => {
@@ -46,7 +46,7 @@ const LoginScreen = () => {
     };
 
     axios
-      .post("http://172.20.10.6:8000/login", user)
+      .post("http://10.0.14.153:8000/login", user)
       .then((response) => {
         console.log(response);
         const token = response.data.token;
@@ -103,10 +103,9 @@ if (!fontsLoaded) {
           )}
         </View>
 
-        <TouchableOpacity
-            onPress={() => navigation.navigate('Forgot')} style={{ alignSelf: 'center', padding:18}} >
+        <View style={{ alignSelf: 'center', padding:10}} >
             <Text style={styles.buttonText1}></Text>
-          </TouchableOpacity>
+          </View>
 
         <View style={styles.gradient} >
           <TouchableOpacity
@@ -142,7 +141,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop:5,
+    marginTop:1,
   },
   buttonText: {
     color: '#FFF',
@@ -150,7 +149,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Kanit_400Regular',
   },
   buttonText1: {
-    color: '#52B788',
+    color: '#BBBBBB',
     fontSize: 15,
     marginTop: 20,
     fontFamily: 'Kanit_400Regular',
@@ -158,7 +157,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 300,
     height: 100,
-    marginTop:30,
+    marginTop:50,
   },
   bg: {
     width: 200,
@@ -196,7 +195,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: '25%',
+    marginTop: '35%',
   },
   buttonTextRegis: {
     color: '#52B788',

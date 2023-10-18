@@ -20,15 +20,19 @@ const userSchema = new mongoose.Schema({
   },
   dateOfBirth: {
     type: Date, // เพิ่มวันเดือนปีเกิด
+    required: true,
   },
   weight: {
     type: Number, // เพิ่มน้ำหนัก
+    required: true,
   },
   height: {
     type: Number, // เพิ่มส่วนสูง
+    required: true,
   },
   diabetesType: {
     type: String, // เพิ่มประเภทของเบาหวาน
+    required: true,
   },
   freindRequests: [
     {

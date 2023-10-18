@@ -332,7 +332,6 @@ app.get("/profile/:userId", async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     // ดึงข้อมูลจาก user
     const { image, dateOfBirth, weight, height, diabetesType, ...userData } = user.toObject();
 
@@ -342,9 +341,43 @@ app.get("/profile/:userId", async (req, res) => {
   }
 });
 
+app.put('/profile/:userId', async (req, res) => {
+  const userId = req.params.userId;
+  const updatedProfileData = req.body; // Data sent by the client for updating the profile
 
+  try {
+    // Find the user by their ID and update their profile data
+    const user = await User.findByIdAndUpdate(userId, updatedProfileData, { new: true });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    return res.status(200).json({ message: "User profile updated successfully", user });
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return res.status(500).json({ message: "Error updating the user profile" });
+  }
+});
 
 //Finish
+//food
+// Import the Food model or define it if not already done
+const Food =require("./models/food"); 
+// Define your API endpoint to fetch food data
+app.get('/food', async (req, res) => {
+  try {
+    const foods = await Food.find();
+    if (foods.length === 0) {
+      return res.status(404).json({ message: 'No food records found' });
+    }
+    res.status(200).json(foods);
+  } catch (error) {
+    console.error('Error fetching food records:', error);
+    res.status(500).json({ error: 'Unable to fetch food records' });
+  }
+});
+
 
 const Medication = require('./models/medication');
 //เพิ่ม

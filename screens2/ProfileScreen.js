@@ -65,7 +65,7 @@ const ProfileScreen = () => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://10.0.14.153:8000/profile/${userId}`
+          `http://172.20.10.6:8000/profile/${userId}`
         );
         const { user, image, dateOfBirth, weight, height, diabetesType } = response.data;
 

@@ -36,6 +36,7 @@ const HomeScreenChat = () => {
       ),
     });
   }, []);
+  
 
   const filterUsers = () => {
     const filtered = users.filter((user) =>
@@ -60,7 +61,7 @@ const HomeScreenChat = () => {
       setUserId(userId);
 
       axios
-        .get(`http://10.0.14.153:8000/users/${userId}`)
+        .get(`http://172.20.10.6:8000/users/${userId}`)
         .then((response) => {
           setUsers(response.data);
         })

@@ -57,35 +57,6 @@ const TabMenu = () => {
     }
   };
 
-  const [foods, setFoods] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-    async function fetchFoodData() {
-      try {
-        const response = await fetch('http://172.20.10.6:8000/food');
-        const data = await response.json();
-
-        if (response.status === 200) {
-          setFoods(data);
-        } else {
-          console.error('Failed to fetch food data');
-        }
-      } catch (error) {
-        console.error('An error occurred:', error);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchFoodData();
-  }, []); // Empty dependency array to run the effect only once
-  if (isLoading) {
-    return (
-      <View>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -120,23 +91,6 @@ const TabMenu = () => {
               placeholder="ค้นหารายการอาหาร..."
             />
           </View>
-
-          <View>
-          <FlatList
-      data={foods}
-      keyExtractor={(food) => food.FoodName} // Use a unique identifier
-      renderItem={({ item }) => (
-        <View style={styles.foodContainer}>
-          <Text style={styles.foodName}>Food Name: {item.FoodName}</Text>
-          <Text>Protein: {item.FoodProtein}g</Text>
-          <Text>Fat: {item.FoodFat}g</Text>
-          <Text>Carbohydrates: {item.FoodCarbo}g</Text>
-          <Text>Fiber: {item.FoodFiber}g</Text>
-          <Text>Calories: {item.FoodCalorie}</Text>
-        </View>
-      )}
-    />
-    </View>
 
         </View>
       }

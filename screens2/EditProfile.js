@@ -32,7 +32,7 @@ const EditProfileScreen = ({ navigation }) => {
 
   const saveChanges = () => {
     axios
-      .put(`http://10.0.14.153:8000/profile/${userId}`, editedUser)
+      .put(`http://172.20.10.6:8000/profile/${userId}`, editedUser)
       .then((response) => {
         navigation.navigate("Profile");
       })
@@ -45,7 +45,7 @@ const EditProfileScreen = ({ navigation }) => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://10.0.14.153:8000/profile/${userId}`
+          `http://172.20.10.6:8000/profile/${userId}`
         );
         const { image } = response.data;
         setUserImage(image);

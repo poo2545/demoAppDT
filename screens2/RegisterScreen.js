@@ -48,7 +48,7 @@ const RegisterScreen = () => {
       diabetesType: diabetesType,
     };
     axios
-      .post('http://10.0.14.153:8000/register', user)
+      .post('http://172.20.10.6:8000/register', user)
       .then((response) => {
         console.log(response);
         Alert.alert('คุณได้ลงทะเบียนสำเร็จแล้ว');

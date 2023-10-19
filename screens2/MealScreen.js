@@ -18,7 +18,7 @@ const MealForm = () => {
         }
 
         axios
-            .post("http://10.0.14.153:8000/meals", postData)
+            .post("http://172.20.10.6:8000/meals", postData)
             .then((response) => {
                 setMealName("");
                 setMealCalorie("");

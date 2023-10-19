@@ -24,7 +24,7 @@ const DragScreen = () => {
       headerRight: () => (
         <View style={{ flexDirection: "row", alignItems: "center", gap: 8 , padding:10}}>
       <TouchableOpacity style={styles.refreshButton} onPress={handleRefresh}>
-        <Ionicons name="refresh" size={20} color="#BBBBBB" />
+        <Ionicons name="refresh" size={20} color="white" />
       </TouchableOpacity>
         </View>
       ),
@@ -58,7 +58,7 @@ const DragScreen = () => {
       return;
     }
     try {
-      const response = await axios.post('http://10.0.14.153:8000/medications', {
+      const response = await axios.post('http://172.20.10.6:8000/medications', {
         userId,
         time,
         dosage,
@@ -81,7 +81,7 @@ const DragScreen = () => {
 
   const fetchMedication = async (userId) => {
     try {
-      const response = await axios.get(`http://10.0.14.153:8000/medications/${userId}`);
+      const response = await axios.get(`http://172.20.10.6:8000/medications/${userId}`);
       setMedicationRecords(response.data);
       console.log('Fetched medication records:', response.data);
     } catch (error) {
@@ -99,7 +99,7 @@ const DragScreen = () => {
       return;
     }
     try {
-      const response = await axios.put(`http://10.0.14.153:8000/medications/${selectedMedicationId}`, {
+      const response = await axios.put(`http://172.20.10.6:8000/medications/${selectedMedicationId}`, {
         time: editedTime,
         dosage: editedDosage,
         medicationName: editedMedicationName,
@@ -132,7 +132,7 @@ const DragScreen = () => {
 
   const deleteMedication = async (medicationId) => {
     try {
-      const response = await axios.delete(`http://10.0.14.153:8000/medications/${medicationId}`);
+      const response = await axios.delete(`http://172.20.10.6:8000/medications/${medicationId}`);
       console.log('Deleted medication:', response.data);
       // Update the medicationRecords state to remove the deleted item
       setMedicationRecords((prevRecords) =>

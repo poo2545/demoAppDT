@@ -24,7 +24,8 @@ import DairySave from './screens2/DairySave';
 import Snack from "./JounalFood/Snack";
 import DragTest from './screens2/DragTest';
 import RecommendFood from "./screens2/RecommendFood";
-
+import RecommendFood2 from "./screens2/RecommenFood2";
+import FeatchFood from "./components/FeatchFood";
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -89,6 +90,13 @@ const StackNavigator = () => {
         />
         <Stack.Screen name="RecommendFood"
           component={RecommendFood}
+        />
+
+        <Stack.Screen name="RecommendFood2"
+          component={RecommendFood2}
+        />
+        <Stack.Screen name="FeatchFood"
+          component={FeatchFood}
         />
 
         <Stack.Screen name="Main"

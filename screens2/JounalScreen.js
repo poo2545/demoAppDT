@@ -23,6 +23,7 @@ const JounalFood = () => {
       },
     });
   }, []);
+  
   const handlePreviousDay = () => {
     const newDate = new Date(selectedDate);
     newDate.setDate(newDate.getDate() - 1);

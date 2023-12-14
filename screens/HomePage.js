@@ -1,27 +1,49 @@
-import {useLayoutEffect , React} from 'react';
-import {
-  Text,
-  View,
-  StyleSheet,
-  SafeAreaView,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import React, { useLayoutEffect, useContext, useEffect, useState } from "react";
+import { Text, View, StyleSheet, SafeAreaView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import jwt_decode from "jwt-decode";
+import axios from "axios";
+import User from "../components/User";
+import { UserType } from "../UserContext";
+import { apiBaseUrl } from '../ApiConfig';
+
 const HomePage = () => {
-    const navigation = useNavigation();
+  const navigation = useNavigation();
+  const { userId, setUserId } = useContext(UserType);
+  const [users, setUsers] = useState([]);
 
-    useLayoutEffect(() => {
-        navigation.setOptions({
-          headerTitle: () => (
-            <Text style={{ fontSize: 20,fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>คำแนะนำ</Text>
-          ),
-          headerStyle: {
-            backgroundColor: '#FFFFFF',
-          },
+
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerTitle: () => (
+        <Text style={{ fontSize: 20,fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>คำแนะนำ</Text>
+      ),
+      headerStyle: {
+        backgroundColor: '#FFFFFF',
+      },
+    });
+  }, []);
+  
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const token = await AsyncStorage.getItem("authToken");
+      const decodedToken = jwt_decode(token);
+      const userId = decodedToken.userId;
+      setUserId(userId);
+
+      axios
+        .get(`http://${apiBaseUrl}:8000/users/${userId}`)
+        .then((response) => {
+          setUsers(response.data);
+        })
+        .catch((error) => {
+          console.log("error retrieving users", error);
         });
-      }, []);
+    };
 
+    fetchUsers();
+  }, []);
   return (
     <>
     <SafeAreaView style={styles.container}>

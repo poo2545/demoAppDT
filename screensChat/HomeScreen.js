@@ -8,6 +8,7 @@ import jwt_decode from "jwt-decode";
 import axios from "axios";
 import User from "../components/User";
 import { TextInput, View, StyleSheet, FlatList, Text, SafeAreaView, Image, Button, TouchableOpacity } from "react-native";
+import { apiBaseUrl } from '../ApiConfig';
 
 const HomeScreenChat = () => {
   const navigation = useNavigation();
@@ -61,7 +62,7 @@ const HomeScreenChat = () => {
       setUserId(userId);
 
       axios
-        .get(`http://172.20.10.6:8000/users/${userId}`)
+        .get(`http://${apiBaseUrl}:8000/users/${userId}`)
         .then((response) => {
           setUsers(response.data);
         })

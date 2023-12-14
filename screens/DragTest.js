@@ -1,19 +1,11 @@
 import React, { useState, useEffect, useContext , useLayoutEffect } from 'react';
-import {
-  View,
-  Text,
-  TextInput,
-  Button,
-  StyleSheet,
-  TouchableOpacity,
-  FlatList,
-  Modal,
-  Alert,
+import {View,Text,TextInput,StyleSheet,TouchableOpacity,FlatList,Modal,Alert,
 } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { UserType } from '../UserContext';
 import { Ionicons } from "@expo/vector-icons";
+import { apiBaseUrl } from '../ApiConfig';
 
 const DragScreen = () => {
   useLayoutEffect(() => {
@@ -58,7 +50,7 @@ const DragScreen = () => {
       return;
     }
     try {
-      const response = await axios.post('http://172.20.10.6:8000/medications', {
+      const response = await axios.post(`http://${apiBaseUrl}:8000/medications`, {
         userId,
         time,
         dosage,
@@ -71,6 +63,7 @@ const DragScreen = () => {
       setTime('');
       setSize('');
       alert('บันทึกสำเร็จ');
+      fetchMedication(userId);
     } catch (error) {
       console.error('Error creating:', error);
       console.error('Error response data:', error.response?.data);
@@ -81,11 +74,10 @@ const DragScreen = () => {
 
   const fetchMedication = async (userId) => {
     try {
-      const response = await axios.get(`http://172.20.10.6:8000/medications/${userId}`);
+      const response = await axios.get(`http://${apiBaseUrl}:8000/medications/${userId}`);
       setMedicationRecords(response.data);
       console.log('Fetched medication records:', response.data);
     } catch (error) {
-      
     }
   };
 
@@ -99,7 +91,7 @@ const DragScreen = () => {
       return;
     }
     try {
-      const response = await axios.put(`http://172.20.10.6:8000/medications/${selectedMedicationId}`, {
+      const response = await axios.put(`http://${apiBaseUrl}:8000/medications/${selectedMedicationId}`, {
         time: editedTime,
         dosage: editedDosage,
         medicationName: editedMedicationName,
@@ -132,7 +124,7 @@ const DragScreen = () => {
 
   const deleteMedication = async (medicationId) => {
     try {
-      const response = await axios.delete(`http://172.20.10.6:8000/medications/${medicationId}`);
+      const response = await axios.delete(`http://${apiBaseUrl}:8000/medications/${medicationId}`);
       console.log('Deleted medication:', response.data);
       // Update the medicationRecords state to remove the deleted item
       setMedicationRecords((prevRecords) =>
@@ -249,8 +241,6 @@ const DragScreen = () => {
             <TouchableOpacity style={styles.recordButton} onPress={editMedication}>
               <Text style={styles.buttonText}>บันทึกการแก้ไข</Text>
             </TouchableOpacity>
-
-
           </View>
         </View>
       </Modal>

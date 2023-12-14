@@ -18,6 +18,7 @@ import EmojiSelector from "react-native-emoji-selector";
 import { UserType } from "../UserContext";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import * as ImagePicker from "expo-image-picker";
+import { apiBaseUrl } from '../ApiConfig';
 
 const ChatMessagesScreen = () => {
   const [showEmojiSelector, setShowEmojiSelector] = useState(false);
@@ -56,7 +57,7 @@ const ChatMessagesScreen = () => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://172.20.10.6:8000/messages/${userId}/${recepientId}`
+        `http://${apiBaseUrl}:8000/messages/${userId}/${recepientId}`
       );
       const data = await response.json();
 
@@ -78,7 +79,7 @@ const ChatMessagesScreen = () => {
     const fetchRecepientData = async () => {
       try {
         const response = await fetch(
-          `http://172.20.10.6:8000/user/${recepientId}`
+          `http://${apiBaseUrl}:8000/user/${recepientId}`
         );
 
         const data = await response.json();
@@ -109,7 +110,7 @@ const ChatMessagesScreen = () => {
         formData.append("messageText", message);
       }
 
-      const response = await fetch("http://172.20.10.6:8000/messages", {
+      const response = await fetch(`http://${apiBaseUrl}:8000/messages`, {
         method: "POST",
         body: formData,
       });
@@ -179,7 +180,7 @@ const ChatMessagesScreen = () => {
 
   const deleteMessages = async (messageIds) => {
     try {
-      const response = await fetch("http://172.20.10.6:8000/deleteMessages", {
+      const response = await fetch(`http://${apiBaseUrl}:8000/deleteMessages`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

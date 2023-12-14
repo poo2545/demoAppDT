@@ -7,6 +7,7 @@ import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Ionicons } from "@expo/vector-icons";
 import NutrientsGraph from '../components/NutrientsGraph';
+import { apiBaseUrl } from '../ApiConfig';
 
 const ProfileScreen = () => {
 
@@ -37,7 +38,7 @@ const ProfileScreen = () => {
   const [diabetesType, setDiabetesType] = useState("");
   const navigation = useNavigation();
   const { userId, setUserId } = useContext(UserType);
-  const graphData = [1650, 1500, 1652, 1858, 1534, 1550, 1805];
+
 
   const logout = () => {
     clearAuthToken();
@@ -61,11 +62,15 @@ const ProfileScreen = () => {
     setIsRefreshing(false);
   };
 
+
   useEffect(() => {
+    fetchProfile(userId);
+  }, []);
+ 
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://172.20.10.6:8000/profile/${userId}`
+          `http://${apiBaseUrl}:8000/profile/${userId}`
         );
         const { user, image, dateOfBirth, weight, height, diabetesType } = response.data;
 
@@ -75,13 +80,11 @@ const ProfileScreen = () => {
         setHeight(height);
         setWeight(weight);
         setDiabetesType(diabetesType);
+        fetchProfile(userId);
       } catch (error) {
         console.log("error", error);
       }
     };
-
-    fetchProfile();
-  }, [userId]);
 
   // นี้เป็นฟังก์ชันที่ใช้ในการคำนวณอายุ
   const calculateAge = (dateOfBirth) => {
@@ -105,10 +108,8 @@ const ProfileScreen = () => {
     if (!weight || !height) {
       return "ไม่สามารถคำนวณได้";
     }
-
     const heightInMeters = height / 100;
     const bmi = (weight / (heightInMeters * heightInMeters)).toFixed(2);
-
     if (bmi < 18.5) {
       return `${bmi} (น้ำหนักต่ำ)`;
     } else if (bmi >= 18.5 && bmi < 24.9) {
@@ -125,6 +126,7 @@ const ProfileScreen = () => {
     <Text style={styles.bio}>BMI: {calculateBMI()}</Text>
   );
 
+  
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.medicationContainer}>
@@ -159,7 +161,7 @@ const ProfileScreen = () => {
         <View style={styles.containerGraph}>
           <View style={{ justifyContent: 'center', alignItems: 'center', marginTop: 8 }}>
             <Text style={{ color: '#8B8383', fontSize: 20, fontFamily: 'Kanit_400Regular', marginTop: 8 }}>ปริมาณแคลอรี่ที่ได้รับต่อวัน</Text>
-            <NutrientsGraph data={graphData} />
+            <NutrientsGraph />
           </View>
         </View>
       </View>
@@ -212,8 +214,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   graph: {
-    width: '90%',
-    height: '40%',
+    width: '95%',
+    height: '50%',
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',

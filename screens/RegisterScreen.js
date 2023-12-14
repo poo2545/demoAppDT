@@ -16,6 +16,7 @@ import axios from 'axios';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
 import DatePicker from '@react-native-community/datetimepicker';
+import { apiBaseUrl } from '../ApiConfig';
 
 const RegisterScreen = () => {
   const [email, setEmail] = useState('');
@@ -48,7 +49,7 @@ const RegisterScreen = () => {
       diabetesType: diabetesType,
     };
     axios
-      .post('http://172.20.10.6:8000/register', user)
+      .post(`http://${apiBaseUrl}:8000/register`, user)
       .then((response) => {
         console.log(response);
         Alert.alert('คุณได้ลงทะเบียนสำเร็จแล้ว');

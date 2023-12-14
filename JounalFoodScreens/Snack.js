@@ -9,7 +9,7 @@ const TabMenu = () => {
   useLayoutEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
-        <Text style={{ fontSize: 20, fontWeight: "bold", fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารเย็น</Text>
+        <Text style={{ fontSize: 20,  fontFamily: 'Kanit_400Regular', justifyContent: 'center' }}>อาหารว่าง</Text>
       ),
       headerStyle: {
         backgroundColor: 'white',
@@ -32,7 +32,7 @@ const TabMenu = () => {
 
   const recordMeal = async () => {
     try {
-      const response = await axios.post('http://172.20.10.6:8000/patientMeals', {
+      const response = await axios.post('http://10.0.14.153:8000/patientMeals', {
         userId,
         mealName: mealNameState, // Use correct variable names here
         calories: caloriesState,
@@ -56,7 +56,6 @@ const TabMenu = () => {
       alert('An error occurred while recording medication. Please try again later.');
     }
   };
-
 
   return (
     <SafeAreaView style={styles.container}>
@@ -91,7 +90,6 @@ const TabMenu = () => {
               placeholder="ค้นหารายการอาหาร..."
             />
           </View>
-
         </View>
       }
 
@@ -185,7 +183,6 @@ const styles = StyleSheet.create({
   },
   tabText: {
     color: 'white',
-    fontWeight: 'bold',
     fontFamily: 'Kanit_400Regular',
   },
   circle1: {

@@ -1,17 +1,22 @@
-import React, { useState, useLayoutEffect, useEffect } from 'react';
+import React, { useState, useLayoutEffect, useEffect , useContext} from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity, Image, SafeAreaView, FlatList, Modal, ScrollView } from 'react-native';
 import axios from 'axios';
 import { useNavigation } from '@react-navigation/native';
 import { Calendar } from 'react-native-calendars';
 import { LineChart } from 'react-native-chart-kit';
 import NutrientsGraph from '../components/NutrientsGraph';
+import { UserType } from '../UserContext'; 
+import { apiBaseUrl } from '../ApiConfig';
+
 
 const JounalFood = () => {
   const navigation = useNavigation();
   const [foods, setFoods] = useState([]);
+  const [mealData, setMealData] = useState([]);
+  const [isModalVisible, setModalVisible] = useState(false);
+  const { userId } = useContext(UserType);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [isCalendarVisible, setCalendarVisible] = useState(false);
-  const graphData = [1650, 1500, 1652, 1858, 1534, 1550 , 1805 ];
 
   useLayoutEffect(() => {
     navigation.setOptions({
@@ -41,6 +46,101 @@ const JounalFood = () => {
   const handleDateClick = (date) => {
     setSelectedDate(new Date(date.dateString));
     setCalendarVisible(false);
+  };
+
+
+  const fetchMealData = async () => {
+    try {
+      const apiUrl = `http://${apiBaseUrl}:8000/meals/${userId}/${selectedDate}`;
+      const response = await axios.get(apiUrl);
+      setMealData(response.data);
+    } catch (error) {
+      console.error('Error fetching meal data:', error.message);
+    }
+  };
+  useEffect(() => {
+    fetchMealData();
+  }, [userId, selectedDate]);
+
+  const [totalCalories, setTotalCalories] = useState(0);
+  const calculateTotalCalories = (data) => {
+    let totalCalories = 0;
+    data.forEach((meal) => {
+      const breakfastCalories = meal.Breakfast.reduce((sum, food) => sum + food.Bcalories, 0);
+      const lunchCalories = meal.Lunch.reduce((sum, food) => sum + food.Lcalories, 0);
+      const dinnerCalories = meal.Dinner.reduce((sum, food) => sum + food.Dcalories, 0);
+      totalCalories += breakfastCalories + lunchCalories + dinnerCalories;
+    });
+    return totalCalories;
+  };
+
+  const [totalProtein, setTotalProtein] = useState(0);
+  const calculateTotalProtein = (meals) => {
+    let totalProtein = 0;
+    meals.forEach((meal) => {
+      meal.Breakfast.forEach((food) => {
+        totalProtein += food.BProtein ? parseFloat(food.BProtein) : 0;
+      });
+      meal.Lunch.forEach((food) => {
+        totalProtein += food.LProtein ? parseFloat(food.LProtein) : 0;
+      });
+      meal.Dinner.forEach((food) => {
+        totalProtein += food.DProtein ? parseFloat(food.DProtein) : 0;
+      });
+    });
+  
+    return totalProtein;
+  };
+
+  const [totalFat, setTotalFat] = useState(0);
+  const calculateTotalFat = (meals) => {
+    let totalFat = 0;
+    meals.forEach((meal) => {
+      meal.Breakfast.forEach((food) => {
+        totalFat += food.BFat ? parseFloat(food.BFat) : 0;
+      });
+      meal.Lunch.forEach((food) => {
+        totalFat += food.LFat ? parseFloat(food.LFat) : 0;
+      });
+      meal.Dinner.forEach((food) => {
+        totalFat += food.DFat ? parseFloat(food.DFat) : 0;
+      });
+    });
+    return totalFat;
+  };
+
+  const [totalCarbo, setTotalCarbo] = useState(0);
+  const calculateTotalCarbo = (meals) => {
+    let totalCarbo = 0;
+    meals.forEach((meal) => {
+      meal.Breakfast.forEach((food) => {
+        totalCarbo += food.BCarbohydrate ? parseFloat(food.BCarbohydrate) : 0;
+      });
+      meal.Lunch.forEach((food) => {
+        totalCarbo += food.LCarbohydrate ? parseFloat(food.LCarbohydrate) : 0;
+      });
+      meal.Dinner.forEach((food) => {
+        totalCarbo += food.DCarbohydrate ? parseFloat(food.DCarbohydrate) : 0;
+      });
+    });
+    return totalCarbo;
+  };
+
+  const [totalFiber, setTotalFiber] = useState(0);
+  const calculateTotalFiber = (meals) => {
+    let totalFiber = 0;
+    meals.forEach((meal) => {
+      meal.Breakfast.forEach((food) => {
+        totalFiber += food.BFiber ? parseFloat(food.BFiber) : 0;
+      });
+      meal.Lunch.forEach((food) => {
+        totalFiber += food.LFiber ? parseFloat(food.LFiber) : 0;
+      });
+      meal.Dinner.forEach((food) => {
+        totalFiber += food.DFiber ? parseFloat(food.DFiber) : 0;
+      });
+    });
+    return totalFiber;
   };
 
 
@@ -94,6 +194,7 @@ const JounalFood = () => {
             </SafeAreaView>
           </Modal>
         </View>
+
         <View style={styles.container}>
           <View style={styles.row}>
             <TouchableOpacity style={styles.button1} onPress={() => navigation.navigate('Breakfast')} >
@@ -131,41 +232,48 @@ const JounalFood = () => {
               </View>
               <View style={styles.circle2}>
                 <Text style={{ color: '#8B8383', fontSize: 20, fontFamily: 'Kanit_400Regular', }}>แคลอรี่ที่ได้รับจากอาหาร</Text>
-                <Text style={{ color: '#DD7979', fontSize: 20, fontFamily: 'Kanit_400Regular', fontWeight: 'bold' }}>0</Text>
+                <Text style={{ color: '#DD7979', fontSize: 20, fontFamily: 'Kanit_400Regular', fontWeight: 'bold' }}>{totalCalories}</Text>
                 <Text style={{ color: '#8B8383', fontSize: 20, fontFamily: 'Kanit_400Regular', }}>Kcal</Text>
               </View>
             </View>
           </View>
 
           <View style={styles.meal}>
-            <Text style={{ fontFamily: 'Kanit_400Regular', marginTop: 5, fontSize: 20, color: '#8B8383' }}>สารอาหารหลัก</Text>
+            <Text style={{ fontFamily: 'Kanit_400Regular', marginTop: 15, fontSize: 20, color: '#8B8383' }}>สารอาหารหลัก (ต่อวัน)</Text>
+            
             <View style={styles.meal2}>
+
               <View style={styles.meal3}>
-                <Text style={styles.textMeal}>0</Text>
                 <Text style={styles.textMeal}>โปรตีน</Text>
+                <Text style={styles.textMeal11}>{totalProtein}<Text style={styles.textMeal}> กรัม</Text></Text>
               </View>
 
               <View style={styles.meal4}>
-                <Text style={styles.textMeal}>0</Text>
                 <Text style={styles.textMeal}>ไขมัน</Text>
+                <Text style={styles.textMeal11}>{totalFat}<Text style={styles.textMeal}> กรัม</Text></Text>
               </View>
 
               <View style={styles.meal5}>
-                <Text style={styles.textMeal}>0</Text>
                 <Text style={styles.textMeal}>คาร์โบ..</Text>
+                <Text style={styles.textMeal11}>{totalCarbo}<Text style={styles.textMeal}> กรัม</Text></Text>
+              </View>
+
+              <View style={styles.meal6}>
+                <Text style={styles.textMeal}>ไฟเบอร์</Text>
+                <Text style={styles.textMeal11}>{totalFiber}<Text style={styles.textMeal}> กรัม</Text></Text>
               </View>
 
             </View>
           </View>
 
-          <View style={styles.graph}>
+          {/* <View style={styles.graph}>
             <View style={styles.containerGraph}>
               <View style={{justifyContent: 'center',alignItems: 'center',marginTop: 8}}>
                 <Text style={{ color: '#8B8383', fontSize: 20, fontFamily: 'Kanit_400Regular',marginTop: 8 }}>ปริมาณแคลอรี่ที่ได้รับต่อวัน</Text>
-                 <NutrientsGraph data={graphData} />
+                 <NutrientsGraph />
               </View>
             </View>
-          </View>
+          </View> */}
 
           <View style={{
             width: '90%',
@@ -224,7 +332,7 @@ const styles = StyleSheet.create({
   },
   krop: {
     width: '90%',
-    height: '15%',
+    height: '20%',
     backgroundColor: 'white',
     borderRadius: 10,
     alignItems: 'center',
@@ -289,7 +397,7 @@ const styles = StyleSheet.create({
   },
   meal: {
     width: '90%',
-    height: '15%',
+    height: '25%',
     flexShrink: 0,
     backgroundColor: '#FFF',
     borderRadius: 15,
@@ -300,7 +408,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'flex-start',
-    gap: 25,
+    gap: 10,
     flexDirection: 'row',
     marginTop: 8,
   },
@@ -334,9 +442,24 @@ const styles = StyleSheet.create({
     borderWidth: 7,
     borderColor: '#A6E4FF',
   },
+  meal6: {
+    width: 75,
+    height: 75,
+    borderRadius: 75,
+    backgroundColor: '#FFFFFF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 7,
+    borderColor: '#B4FFA3',
+  },
   textMeal: {
     color: '#8B8383',
     fontSize: 12,
+    fontFamily: 'Kanit_400Regular',
+  },
+  textMeal11 : {
+    color: '#DD7979',
+    fontSize: 15,
     fontFamily: 'Kanit_400Regular',
   },
   mealRow: {

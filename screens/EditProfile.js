@@ -1,8 +1,9 @@
 import React, { useState, useContext, useEffect, useLayoutEffect } from "react";
 import { View, Text, TextInput, Button, Image, StyleSheet, TouchableOpacity } from "react-native";
-import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from 'expo-image-picker';  // Import expo-image-picker
 import axios from "axios";
 import { UserType } from "../UserContext";
+import { apiBaseUrl } from '../ApiConfig';
 
 const EditProfileScreen = ({ navigation }) => {
 
@@ -21,18 +22,31 @@ const EditProfileScreen = ({ navigation }) => {
   const [editedUser, setEditedUser] = useState({});
   const { userId, setUserId } = useContext(UserType);
   const [userImage, setUserImage] = useState(null);
-  
-  const pickImage = () => {
-    ImagePicker.showImagePicker({ title: "Select Image" }, (response) => {
-      if (!response.didCancel && !response.error) {
-        setEditedUser({ ...editedUser, image: response.uri });
-      }
-    });
-  };
 
+  
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsEditing: true,
+      aspect: [1, 1],
+      quality: 1,
+    });
+  
+    if (!result.cancelled && result.assets && result.assets.length > 0) {
+      // Use the first selected asset's URI from the assets array
+      const selectedImageUri = result.assets[0].uri;
+  
+      // Update editedUser state with the newly selected image URI
+      setEditedUser({ ...editedUser, image: selectedImageUri });
+  
+      // Update userImage state with the newly selected image URI
+      setUserImage(selectedImageUri);
+    }
+  };
+  
   const saveChanges = () => {
     axios
-      .put(`http://172.20.10.6:8000/profile/${userId}`, editedUser)
+      .put(`http://${apiBaseUrl}:8000/profile/${userId}`, editedUser)
       .then((response) => {
         navigation.navigate("Profile");
       })
@@ -45,7 +59,7 @@ const EditProfileScreen = ({ navigation }) => {
     const fetchProfile = async () => {
       try {
         const response = await axios.get(
-          `http://172.20.10.6:8000/profile/${userId}`
+          `http://${apiBaseUrl}:8000/profile/${userId}`
         );
         const { image } = response.data;
         setUserImage(image);
@@ -59,15 +73,15 @@ const EditProfileScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-
       {userImage ? (
         <Image style={styles.profileImage} source={{ uri: userImage }} />
       ) : (
         <Image source={{ uri: editedUser.image }} style={styles.profileImage} />
       )}
-      <TouchableOpacity style={{alignItems: 'center' }} onPress={pickImage}>
+      <TouchableOpacity style={{ alignItems: 'center' }} onPress={pickImage}>
         <Text style={{ color: '#969696', fontSize: 18, fontFamily: 'Kanit_400Regular', marginBottom: 5 }}>แก้ไขรูปภาพ</Text>
       </TouchableOpacity>
+
       <TextInput
         style={styles.input}
         placeholder="แก้ไขชื่อ-สกุล"
@@ -105,7 +119,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    alignItems:'center',
+    alignItems: 'center',
     marginTop: 30,
   },
   input: {

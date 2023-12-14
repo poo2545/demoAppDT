@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
-
+const { ObjectId } = require('mongodb');
 const app = express();
 const port = 8000;
 const cors = require("cors");
@@ -417,16 +417,13 @@ app.get('/medications/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
-    // Check if userId is valid
     if (!mongoose.Types.ObjectId.isValid(userId)) {
       return res.status(400).json({ message: "Invalid userId" });
     }
 
-    // Find medication records associated with the user
     const medications = await Medication.find({ user: userId });
 
     if (medications.length === 0) {
-      // No medications found for the user
       return res.status(404).json({ message: 'No medication records found for this user' });
     }
 
@@ -484,62 +481,115 @@ app.delete('/medications/:id', async (req, res) => {
 });
 
 
-//Meal 
-const Meal = require('./models/meal'); // Import your PatientMeal model here
-//Add
-// Create a new patient meal
-app.post('/patientMeals', async (req, res) => {
-  try {
-    const { mealName, calories, nutrientsProtien, nutrientsFat, nutrientsCabohidrat , nutrientsFiber , date , userId } = req.body;
+  const MealPatient = require('./models/MealPatient');
+  app.post('/meals', async (req, res) => {
+    try {
+      const { date, BName, Bcalories, BProtein, BFat, BCarbohydrate, BFiber,
+              LName, Lcalories, LProtein, LFat, LCarbohydrate, LFiber,
+              DName, Dcalories, DProtein, DFat, DCarbohydrate, DFiber,
+              userId } = req.body;
+      console.log('Received request with data:', req.body);
+  
+      if (!date || !userId) {
+        return res.status(400).json({ error: 'Missing required fields' });
+      }
+  
+      const newMeal = new MealPatient({
+        Date: date,
+        BName: BName || '',
+        Bcalories: Bcalories || 0,
+        BProtein: BProtein || 0,
+        BFat: BFat || 0,
+        BCarbohydrate: BCarbohydrate || 0,
+        BFiber: BFiber || 0,
 
-    // Check if userId is valid
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid userId" });
+        LName: LName || '',
+        Lcalories: Lcalories || 0,
+        LProtein: LProtein || 0,
+        LFat: LFat || 0,
+        LCarbohydrate: LCarbohydrate || 0,
+        LFiber: LFiber || 0,
+
+        DName: DName || '',
+        Dcalories: Dcalories || 0,
+        DProtein: DProtein || 0,
+        DFat: DFat || 0,
+        DCarbohydrate: DCarbohydrate || 0,
+        DFiber: DFiber || 0,
+
+        user: userId,
+      });
+      const savedMeal = await newMeal.save();
+      res.status(201).json(savedMeal);
+    } catch (error) {
+      console.error('Error saving meal:', error.message);
+      res.status(500).json({ error: 'Internal Server Error', message: error.message });
+    }
+  });
+  
+  app.get('/meals/:userId/:date', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const date = new Date(req.params.date);
+
+      const meals = await MealPatient.find({ user: userId, Date: date });
+
+      res.status(200).json(meals);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: 'Internal Server Error' });
+    }
+  });
+
+app.delete('/meals/:mealId', async (req, res) => {
+  try {
+    const mealId = req.params.mealId;
+
+    const deletedMeal = await MealPatient.findByIdAndRemove(mealId);
+
+    if (!deletedMeal) {
+      return res.status(404).json({ error: 'Meal not found' });
     }
 
-    // Create a new medication object
-    const newMeal = new Meal({
-      mealName,
-      calories,
-      nutrientsProtien,
-      nutrientsFat,
-      nutrientsCabohidrat,
-      date,
-      nutrientsFiber,
-      user: userId, // Associate the medication with a user
-    });
-
-    // Save the medication to the database
-    await newMeal.save();
-
-    // Respond with a success message and the saved medication
-    res.status(201).json({
-      message: 'Meal record saved successfully',
-      Meal: newMeal,
-    });
+    res.status(200).json({ message: 'Meal deleted successfully' });
   } catch (error) {
-    console.error('Error saving newMeal record:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
-//fetch
-app.get('/patientMeals/:userId', async (req, res) => {
+
+app.put('/meals/:mealId', async (req, res) => {
+  try {
+    const mealId = req.params.mealId;
+    const updatedMealData = req.body;
+
+    // Check if the meal with the specified ID exists
+    const existingMeal = await MealPatient.findById(mealId);
+    if (!existingMeal) {
+      return res.status(404).json({ error: 'Meal not found' });
+    }
+
+    // Update meal data
+    Object.assign(existingMeal, updatedMealData);
+
+    // Save the updated meal
+    const updatedMeal = await existingMeal.save();
+
+    res.status(200).json(updatedMeal);
+  } catch (error) {
+    console.error('Error updating meal:', error.message);
+    res.status(500).json({ error: 'Internal Server Error', message: error.message });
+  }
+});
+
+app.get('/meals/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
-
-    // Check if userId is valid
-    if (!mongoose.Types.ObjectId.isValid(userId)) {
-      return res.status(400).json({ message: "Invalid userId" });
-    }
-    // Find medication records associated with the user
-    const meal = await Meal.find({ user: userId });
-    if (meal.length === 0) {
-      // No medications found for the user
-      return res.status(404).json({ message: 'No meal records found for this user' });
-    }
-    res.status(200).json(meal);
+  
+    const meals = await MealPatient.find({ user: userId });
+    res.status(200).json(meals);
   } catch (error) {
-    console.error('Error fetching meal records:', error);
-    res.status(500).json({ error: 'Unable to fetch meal records' });
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });

@@ -4,6 +4,7 @@ import axios from "axios";
 import { UserType } from "../UserContext";
 import FriendRequest from "../components/FriendRequest";
 import { useNavigation } from "@react-navigation/native";
+import { apiBaseUrl } from '../ApiConfig';
 
 const FriendsScreen = () => {
   const { userId, setUserId } = useContext(UserType); // Use useContext to access the context
@@ -28,7 +29,7 @@ const FriendsScreen = () => {
   const fetchFriendRequests = async () => {
     try {
       const response = await axios.get(
-        `http://172.20.10.6:8000/friend-request/${userId}`
+        `http://${apiBaseUrl}:8000/friend-request/${userId}`
       );
       if (response.status === 200) {
         const friendRequestsData = response.data.map((friendRequest) => ({

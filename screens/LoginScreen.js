@@ -13,6 +13,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { LinearGradient } from 'expo-linear-gradient';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { useFonts, Kanit_400Regular } from '@expo-google-fonts/kanit';
+import { apiBaseUrl } from '../ApiConfig';
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -45,8 +46,8 @@ const LoginScreen = () => {
       password: password,
     };
 
-    axios
-      .post("http://172.20.10.6:8000/login", user)
+    axios.post(`http://${apiBaseUrl}:8000/login`, user)
+
       .then((response) => {
         console.log(response);
         const token = response.data.token;

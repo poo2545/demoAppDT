@@ -2,6 +2,7 @@ import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useEffect, useState,useLayoutEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { UserType } from "../UserContext";
+import { apiBaseUrl } from '../ApiConfig';
 
 const UserChat = ({ item }) => {
   const { userId, setUserId } = useContext(UserType);
@@ -20,7 +21,7 @@ const UserChat = ({ item }) => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `http://172.20.10.6:8000/messages/${userId}/${item._id}`
+        `http://${apiBaseUrl}:8000/messages/${userId}/${item._id}`
       );
       const data = await response.json();
 

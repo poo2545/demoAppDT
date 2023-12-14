@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View, Pressable, Image } from "react-native";
 import React, { useContext, useState, useEffect } from "react";
 import { UserType } from "../UserContext";
+import { apiBaseUrl } from '../ApiConfig';
 
 const User = ({ item }) => {
   const { userId, setUserId } = useContext(UserType);
@@ -11,7 +12,7 @@ const User = ({ item }) => {
     const fetchFriendRequests = async () => {
       try {
         const response = await fetch(
-          `http://172.20.10.6:8000/friend-requests/sent/${userId}`
+          `http://${apiBaseUrl}:8000/friend-requests/sent/${userId}`
         );
 
         const data = await response.json();
@@ -31,7 +32,7 @@ const User = ({ item }) => {
   useEffect(() => {
     const fetchUserFriends = async () => {
       try {
-        const response = await fetch(`http://172.20.10.6:8000/friends/${userId}`);
+        const response = await fetch(`http://${apiBaseUrl}:8000/friends/${userId}`);
 
         const data = await response.json();
 
@@ -49,7 +50,7 @@ const User = ({ item }) => {
   }, []);
   const sendFriendRequest = async (currentUserId, selectedUserId) => {
     try {
-      const response = await fetch("http://172.20.10.6:8000/friend-request", {
+      const response = await fetch(`http://${apiBaseUrl}:8000/friend-request`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

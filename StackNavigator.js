@@ -5,27 +5,30 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-import LoginScreen from "./screens2/LoginScreen";
-import RegisterScreen from "./screens2/RegisterScreen";
+import LoginScreen from "./screens/LoginScreen";
+import RegisterScreen from "./screens/RegisterScreen";
 import HomeScreen from "./screensChat/HomeScreen";
 import FriendsScreen from "./screensChat/FriendsScreen";
 import ChatsScreen from "./screensChat/ChatsScreen";
 import ChatMessagesScreen from "./screensChat/ChatMessagesScreen";
-import WelcomeScreen from "./screens2/WelcomeScreen";
-import JounalScreen from "./screens2/JounalScreen";
-import ProfileScreen from "./screens2/ProfileScreen";
-import HomePage from './screens2/HomePage';
-import MealScreen from './screens2/MealScreen';
-import EditProfileScreen from './screens2/EditProfile';
-import Breakfast from './JounalFood/Breakfast';
-import Lunch from './JounalFood/Lunch';
-import Dinner from './JounalFood/Dinner';
-import DairySave from './screens2/DairySave';
-import Snack from "./JounalFood/Snack";
-import DragTest from './screens2/DragTest';
-import RecommendFood from "./screens2/RecommendFood";
-import RecommendFood2 from "./screens2/RecommenFood2";
-import FeatchFood from "./components/FeatchFood";
+import WelcomeScreen from "./screens/WelcomeScreen";
+import JounalScreen from "./screens/JounalScreen";
+import ProfileScreen from "./screens/ProfileScreen";
+import HomePage from './screens/HomePage';
+import EditProfileScreen from './screens/EditProfile';
+import Breakfast from './JounalFoodScreens/Breakfast';
+import Breakfast2 from './components/Breakfast';
+import Lunch from './JounalFoodScreens/Lunch';
+import Dinner from './JounalFoodScreens/Dinner';
+import DairySave from './screens/DairySave';
+import Snack from "./JounalFoodScreens/Snack";
+import DragTest from './screens/DragTest';
+import RecommendFood from "./screens/RecommendFood";
+import RecommendFood2 from "./screens/RecommenFood2";
+
+import PatientMeal from "./components/PateinMeal";
+import Journal from "./screens/Journal";
+import EditMealScreen from './screens/EditMealScreen'
 const StackNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
@@ -61,14 +64,12 @@ const StackNavigator = () => {
           component={ChatMessagesScreen}
         />
 
-        <Stack.Screen name="MealScreen"
-          component={MealScreen}
-        />
-
         <Stack.Screen name="Breakfast"
           component={Breakfast}
         />
-
+        <Stack.Screen name="Breakfast2"
+          component={Breakfast2}
+        />
         <Stack.Screen name="Lunch"
           component={Lunch}
         />
@@ -95,8 +96,17 @@ const StackNavigator = () => {
         <Stack.Screen name="RecommendFood2"
           component={RecommendFood2}
         />
-        <Stack.Screen name="FeatchFood"
-          component={FeatchFood}
+
+        <Stack.Screen name="Journal"
+          component={JounalScreen}
+          options={{ headerShown: false }}
+        />
+
+        <Stack.Screen name="PatientMeal"
+          component={PatientMeal}
+        />
+        <Stack.Screen name="EditMealScreen"
+          component={EditMealScreen}
         />
 
         <Stack.Screen name="Main"
@@ -137,7 +147,7 @@ function Main() {
       />
       <Tab.Screen
         name="Jounal"
-        component={JounalScreen}
+        component={Journal}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome5 name="book" size={24} color={color} /> // Change icon and size
